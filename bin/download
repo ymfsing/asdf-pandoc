@@ -12,24 +12,24 @@ mkdir -p "$ASDF_DOWNLOAD_PATH"
 
 architecture=
 case "$(uname -m)" in
-	x86_64 | x86-64 | x64 | amd64) architecture="amd64" ;;
-	aarch64 | arm64) architecture="arm64" ;;
+x86_64 | x86-64 | x64 | amd64) architecture="amd64" ;;
+aarch64 | arm64) architecture="arm64" ;;
 esac
 
 osname=
 case "$OSTYPE" in
-	darwin*) osname="macOS" ;;
-	linux*) osname="linux" ;;
-	*) fail "Unsupported operating system" ;;
+darwin*) osname="macOS" ;;
+linux*) osname="linux" ;;
+*) fail "Unsupported operating system" ;;
 esac
 
 filenameSuffix=
 case "$osname-$architecture" in
-	macOS*) filenameSuffix="macOS.zip" ;;
-	linux-amd64) filenameSuffix="linux-amd64.tar.gz" ;;
-	linux-arm64) filenameSuffix="linux-arm64.tar.gz" ;;
-	# windows-amd64) filenameSuffix="windows-x64_64.zip" ;;
-	*) fail "Unsupported platform" ;;
+macOS*) filenameSuffix="macOS.zip" ;;
+linux-amd64) filenameSuffix="linux-amd64.tar.gz" ;;
+linux-arm64) filenameSuffix="linux-arm64.tar.gz" ;;
+# windows-amd64) filenameSuffix="windows-x64_64.zip" ;;
+*) fail "Unsupported platform" ;;
 esac
 
 filename=pandoc-$ASDF_INSTALL_VERSION-$filenameSuffix
@@ -42,8 +42,8 @@ curl "${curl_opts[@]}" -o "$release_file" -C - "$url" || fail "Could not downloa
 
 #  Extract contents of tar.gz file into the download directory
 case "$release_file" in
-	*.tar.gz) tar -xzf "$release_file" -C "$ASDF_DOWNLOAD_PATH" || fail "Could not extract $release_file" ;;
-	*.zip) unzip -q "$release_file" -d "$ASDF_DOWNLOAD_PATH" || fail "Could not extract $release_file" ;;
+*.tar.gz) tar -xzf "$release_file" -C "$ASDF_DOWNLOAD_PATH" || fail "Could not extract $release_file" ;;
+*.zip) unzip -q "$release_file" -d "$ASDF_DOWNLOAD_PATH" || fail "Could not extract $release_file" ;;
 esac
 
 # Remove the tar.gz file since we don't need to keep it
