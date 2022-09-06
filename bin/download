@@ -20,7 +20,6 @@ osname=
 case "$OSTYPE" in
 	darwin*) osname="macOS" ;;
 	linux*) osname="linux" ;;
-	msys* | win32*) osname="windows" ;;
 	*) fail "Unsupported operating system" ;;
 esac
 
@@ -29,7 +28,7 @@ case "$osname-$architecture" in
 	macOS*) filenameSuffix="macOS.zip" ;;
 	linux-amd64) filenameSuffix="linux-amd64.tar.gz" ;;
 	linux-arm64) filenameSuffix="linux-arm64.tar.gz" ;;
-	windows-amd64) filenameSuffix="windows-x64_64.zip" ;;
+	# windows-amd64) filenameSuffix="windows-x64_64.zip" ;;
 	*) fail "Unsupported platform" ;;
 esac
 
@@ -42,8 +41,10 @@ echo "* Downloading $TOOL_NAME release $ASDF_INSTALL_VERSION..."
 curl "${curl_opts[@]}" -o "$release_file" -C - "$url" || fail "Could not download $url"
 
 #  Extract contents of tar.gz file into the download directory
-tar -xzf "$release_file" -C "$ASDF_DOWNLOAD_PATH" --strip-components=1 || fail "Could not extract $release_file"
-# TODO support zip
+case "$release_file" in
+	*.tar.gz) tar -xzf "$release_file" -C "$ASDF_DOWNLOAD_PATH" || fail "Could not extract $release_file" ;;
+	*.zip) unzip -q "$release_file" -d "$ASDF_DOWNLOAD_PATH" || fail "Could not extract $release_file" ;;
+esac
 
 # Remove the tar.gz file since we don't need to keep it
 rm "$release_file"
