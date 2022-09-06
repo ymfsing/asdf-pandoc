@@ -10,14 +10,40 @@ source "${plugin_dir}/lib/utils.bash"
 
 mkdir -p "$ASDF_DOWNLOAD_PATH"
 
-# TODO: Adapt this to proper extension and adapt extracting strategy.
-release_file="$ASDF_DOWNLOAD_PATH/$TOOL_NAME-$ASDF_INSTALL_VERSION.tar.gz"
+architecture=
+case "$(uname -m)" in
+	x86_64 | x86-64 | x64 | amd64) architecture="amd64" ;;
+	aarch64 | arm64) architecture="arm64" ;;
+esac
 
-# Download tar.gz file to the download directory
-download_release "$ASDF_INSTALL_VERSION" "$release_file"
+osname=
+case "$OSTYPE" in
+	darwin*) osname="macOS" ;;
+	linux*) osname="linux" ;;
+	msys* | win32*) osname="windows" ;;
+	*) fail "Unsupported operating system" ;;
+esac
+
+filenameSuffix=
+case "$osname-$architecture" in
+	macOS*) filenameSuffix="macOS.zip" ;;
+	linux-amd64) filenameSuffix="linux-amd64.tar.gz" ;;
+	linux-arm64) filenameSuffix="linux-arm64.tar.gz" ;;
+	windows-amd64) filenameSuffix="windows-x64_64.zip" ;;
+	*) fail "Unsupported platform" ;;
+esac
+
+filename=pandoc-$ASDF_INSTALL_VERSION-$filenameSuffix
+url="$GH_REPO/releases/download/$ASDF_INSTALL_VERSION/$filename"
+
+release_file=$ASDF_DOWNLOAD_PATH/$filename
+
+echo "* Downloading $TOOL_NAME release $ASDF_INSTALL_VERSION..."
+curl "${curl_opts[@]}" -o "$release_file" -C - "$url" || fail "Could not download $url"
 
 #  Extract contents of tar.gz file into the download directory
 tar -xzf "$release_file" -C "$ASDF_DOWNLOAD_PATH" --strip-components=1 || fail "Could not extract $release_file"
+# TODO support zip
 
 # Remove the tar.gz file since we don't need to keep it
 rm "$release_file"
