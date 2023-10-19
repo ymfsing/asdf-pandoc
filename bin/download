@@ -54,4 +54,4 @@ rm "$release_file"
 extract_temp=$ASDF_DOWNLOAD_PATH/*
 extract_folder=$ASDF_DOWNLOAD_PATH/pandoc-$ASDF_INSTALL_VERSION
 
-mv "$extract_temp" "$extract_folder"
+mv $extract_temp $extract_folder
