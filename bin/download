@@ -25,7 +25,8 @@ esac
 
 filenameSuffix=
 case "$osname-$architecture" in
-macOS*) filenameSuffix="macOS.zip" ;;
+macOS-amd64) filenameSuffix="x86_64-macOS.zip" ;;
+macOS-arm64) filenameSuffix="arm64-macOS.zip" ;;
 linux-amd64) filenameSuffix="linux-amd64.tar.gz" ;;
 linux-arm64) filenameSuffix="linux-arm64.tar.gz" ;;
 # windows-amd64) filenameSuffix="windows-x64_64.zip" ;;
