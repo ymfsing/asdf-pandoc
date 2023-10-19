@@ -44,7 +44,7 @@ install_version() {
 
   (
     mkdir -p "$install_path"
-    cp -r "$ASDF_DOWNLOAD_PATH/pandoc-$version"/bin/pandoc "$install_path/pandoc"
+    cp -r "$ASDF_DOWNLOAD_PATH/pandoc-$version*"/bin/pandoc "$install_path/pandoc"
 
     local tool_cmd
     tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
