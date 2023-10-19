@@ -41,14 +41,17 @@ release_file=$ASDF_DOWNLOAD_PATH/$filename
 echo "* Downloading $TOOL_NAME release $ASDF_INSTALL_VERSION..."
 curl "${curl_opts[@]}" -o "$release_file" -C - "$url" || fail "Could not download $url"
 
-extract_temp=$ASDF_DOWNLOAD_PATH/*
-extract_folder=$ASDF_DOWNLOAD_PATH/pandoc-$ASDF_INSTALL_VERSION
-
 #  Extract contents of tar.gz file into the download directory
 case "$release_file" in
     *.tar.gz) tar -xzf "$release_file" -C "$ASDF_DOWNLOAD_PATH" || fail "Could not extract $release_file" ;;
-    *.zip) unzip -q "$release_file" -d "$ASDF_DOWNLOAD_PATH" && mv "$extract_temp" "extract_folder" || fail "Could not extract $release_file" ;;
+    *.zip) unzip -q "$release_file" -d "$ASDF_DOWNLOAD_PATH" || fail "Could not extract $release_file" ;;
 esac
 
 # Remove the tar.gz file since we don't need to keep it
 rm "$release_file"
+
+# Correct extract_folder name
+extract_temp=$ASDF_DOWNLOAD_PATH/*
+extract_folder=$ASDF_DOWNLOAD_PATH/pandoc-$ASDF_INSTALL_VERSION
+
+mv "$extract_temp" "extract_folder"
